@@ -19,3 +19,5 @@ duckdb
 pandas
 openai
 streamlit
+unstructured
+unstructured[pdf]

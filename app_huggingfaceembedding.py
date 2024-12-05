@@ -9,6 +9,7 @@ from langchain_core.prompts import ChatPromptTemplate
 from langchain.chains import create_retrieval_chain
 from langchain_community.vectorstores import FAISS
 from langchain_community.document_loaders import PyPDFDirectoryLoader
+from langchain_community.document_loaders import DirectoryLoader
 import openai
 
 from dotenv import load_dotenv
@@ -18,7 +19,7 @@ load_dotenv()
 os.environ['GROQ_API_KEY']=os.getenv("GROQ_API_KEY")
 groq_api_key=os.getenv("GROQ_API_KEY")
 
-## If you do not have open AI key use the below Huggingface embedding
+## If we do not have open AI key use the below Huggingface embedding
 os.environ['HF_TOKEN']=os.getenv("HF_TOKEN")
 from langchain_huggingface import HuggingFaceEmbeddings
 embeddings=HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
@@ -40,15 +41,16 @@ prompt=ChatPromptTemplate.from_template(
 
 def create_vector_embedding():
     if "vectors" not in st.session_state:
-        st.session_state.embeddings=HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
-        st.session_state.loader=PyPDFDirectoryLoader("./maintenance") ## Data Ingestion step
-        st.session_state.docs=st.session_state.loader.load() ## Document Loading
-        st.session_state.text_splitter=RecursiveCharacterTextSplitter(chunk_size=1000,chunk_overlap=200)
-        st.session_state.final_documents=st.session_state.text_splitter.split_documents(st.session_state.docs[:50])
-        st.session_state.vectors=FAISS.from_documents(st.session_state.final_documents,st.session_state.embeddings)
-st.title("RAG Document Q&A With Groq And Lama3")
+        st.session_state.embeddings = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
+        # st.session_state.loader = PyPDFDirectoryLoader("./maintenance")
+        st.session_state.loader = DirectoryLoader("./maintenance")
+        st.session_state.docs = st.session_state.loader.load()
+        st.session_state.text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000,chunk_overlap=200)
+        st.session_state.final_documents = st.session_state.text_splitter.split_documents(st.session_state.docs[:50])
+        st.session_state.vectors = FAISS.from_documents(st.session_state.final_documents,st.session_state.embeddings)
+st.title("Predictive Maintenace")
 
-user_prompt=st.text_input("Enter your query from the research paper")
+user_prompt=st.text_input("Enter Anomaly prediction based-on sensors' output")
 
 if st.button("Document Embedding"):
     create_vector_embedding()
@@ -78,3 +80,4 @@ if user_prompt:
 
 
 ## OTTO 1500 avg is not driving straight. how do i troubleshoot and resolve this issue?
+# RAG Document Q&A With Groq And Lama3
