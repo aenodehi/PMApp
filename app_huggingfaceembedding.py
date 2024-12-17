@@ -79,5 +79,5 @@ if user_prompt:
 
 
 
-## OTTO 1500 avg is not driving straight. how do i troubleshoot and resolve this issue?
+# OTTO 1500 avg is not driving straight. how do i troubleshoot and resolve this issue?
 # RAG Document Q&A With Groq And Lama3
